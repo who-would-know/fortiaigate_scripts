@@ -35,18 +35,28 @@ git clone https://github.com/who-would-know/fortiaigate_scripts.git
 cd fortiaigate_scripts
 ```
 
-**3. Configure your settings**
+**3. Create your `.env` file**
 
-Open `fortiaig_client.py` and update the two lines at the top:
+Copy the example template and fill in your values:
 
-```python
-# ── Config ──────────────────────────────────────────────────────────────────
-FORTIAIG_URL = "https://your-ip:port/v1"   # e.g. https://192.168.1.10:8443/v1
-OPENAI_API_KEY = "sk-proj-..."             # Your OpenAI API key
-# ────────────────────────────────────────────────────────────────────────────
+```bash
+# Mac/Linux
+cp .env.example .env
+
+# Windows
+copy .env.example .env
 ```
 
-> **Note:** The script uses `verify=False` to bypass SSL verification for FortiAIGate's self-signed certificate. This is expected for lab/dev environments.
+Then open `.env` and set your values:
+
+```env
+FORTIAIG_URL=https://your-fortiaig-ip:port/v1
+OPENAI_API_KEY=sk-proj-...
+```
+
+> ⚠️ **Never commit `.env` to git.** It contains secrets and is already listed in `.gitignore`.
+
+> **SSL note:** The script uses `verify=False` to bypass SSL verification for FortiAIGate's self-signed certificate. This is expected for lab/dev environments.
 
 ## Run
 
@@ -54,7 +64,7 @@ OPENAI_API_KEY = "sk-proj-..."             # Your OpenAI API key
 uv run fortiaig_client.py
 ```
 
-`uv` will automatically install dependencies (`openai`, `httpx`) from `pyproject.toml` and run the script — no manual `pip install` needed.
+`uv` will automatically install all dependencies (`openai`, `httpx`, `python-dotenv`) from `pyproject.toml` — no manual `pip install` needed.
 
 ## FortiAIGate Configuration Tips
 
@@ -71,5 +81,6 @@ uv run fortiaig_client.py
 |---|---|
 | `fortiaig_client.py` | Main client — sends a chat completion through FortiAIGate |
 | `fortiaig_client_test.py` | Raw `requests`-based test script for debugging |
+| `.env.example` | Template for your `.env` file — copy this, never edit directly |
 | `pyproject.toml` | Project dependencies for uv |
 | `uv.lock` | Locked dependency versions |
